@@ -132,7 +132,7 @@ var items = [
 
 PennController.GetTable( "datasource-however.csv" ).setLabel("Expt");
 
-PennController.FeedItems( PennController.GetTable( "ddatasource-however.csv" ).filter("ExptType","Practice"),
+PennController.FeedItems( PennController.GetTable( "datasource-however.csv" ).filter("ExptType","Practice"),
     (item) => PennController(
         newFunction("isGood", function(){ return item.Expt=="Practice-good"; })
         ,
