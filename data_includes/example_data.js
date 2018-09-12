@@ -1,32 +1,16 @@
 // This tells Ibex you will send the results early
 var manualSendResults = true;
 var showProgressBar = true;
-var shuffleSequence = seq("setcounter","consent","instructions","prepractice",startsWith("Practice"),"balance","scaleinstr","distract",randomize("experiment-first"),randomize("experiment"),
+var shuffleSequence = seq("consent","instructions","prepractice",startsWith("Practice"),"balance","scaleinstr","distract",randomize("experiment-first"),randomize("experiment"),
                             "feedback","send","confirmation");
 // rshuffle(startsWith("experiment")),rshuffle(startsWith("experiment"))
 PennController.ResetPrefix(null);
 
 
-// keyButton = function(id, text, wait){
-//     let btn = newButton("btn"+id, text)
-//             .print();
-//     let selector = newSelector("sel"+id)
-//                         .settings.add( getButton("btn"+id) )
-//                         .settings.keys( " " );
-//     if (wait)
-//         selector = selector
-//                         .wait( wait );
-//     return [
-//         btn
-//         ,
-//         selector
-//     ];
-// }
-
 var items = [
 
-    ["setcounter", "__SetCounter__", { } ] // DO I NEED THIS?
-    ,    
+   // ["setcounter", "__SetCounter__", { } ] // DO I NEED THIS?
+   // ,    
     ["consent", "PennController", PennController(
         newHtml("consent", "SonaConsent.html")
             .settings.log()
@@ -90,44 +74,62 @@ var items = [
             .wait( getHtml("distract form").test.complete().failure(getHtml("distract form").warn()) )
     )]
     ,
-    ["feedback", "PennController", PennController(
-        newHtml("feedback form", "ProlificFeedback.html")
+    ["inter", "PennController", PennController(
+        newHtml("interlude", "preQuestionnaire.html")
+            .settings.log()
+            .print()   
+        ,
+        newButton("continue btn", "Click here to continue.")
+            .settings.bold()
+            .print()
+            .wait()                 
+      )]  
+    ,      
+    ["feedback1", "PennController", PennController(
+        newHtml("feedback form 1", "SonaFeedback1.html")
+            .settings.log()
+            .print()
+        ,
+        newButton("continue to confirm", "Click here to continue.")
+            .settings.bold()
+            .print()
+            .wait( getHtml("feedback form 1").test.complete().failure(getHtml("feedback form 1").warn()) )              
+    )]
+    ,
+    ["feedback2", "PennController", PennController(
+        newHtml("feedback form 2", "SonaFeedback2.html")
+            .settings.log()
+            .print()
+        ,
+        newButton("continue to confirm", "Click here to continue.")
+            .settings.bold()
+            .print()
+            .wait( getHtml("feedback form 2").test.complete().failure(getHtml("feedback form 2").warn()) )                
+    )]
+    ,    
+    ["feedback3", "PennController", PennController(
+        newHtml("feedback form 3", "SonaFeedback3.html")
             .settings.log()
             .print()
         ,
         newButton("continue to confirm", "Click here to confirm your participation!")
             .settings.bold()
             .print()
-            .wait()                
+            .wait( getHtml("feedback form 3").test.complete().failure(getHtml("feedback form 3").warn()) )  
     )]
-     ,
+    ,      
     ["send", "__SendResults__", {}]   
     ,
-    ["confirmation", "PennController", PennController(
-        newHtml("confirmation form", "ProlificConfirmation.html")
+    ["debrief", "PennController", PennController(
+        newHtml("interlude", "IbexDebriefing.html")
+            .settings.log()
+            .print()   
+        ,
+        newButton("continue btn", "Click to exit.")
+            .settings.bold()
             .print()
-          ,
-          newButton("continue final", "Click to confirm that your answers went through.") // To debriefing, on Sona.
-              .wait()                        
-    )]
-   // ,    // Sona only
-   //  ["debriefing", "PennController", PennController(
-   //     newHtml("confirmation form", "IbexDebriefing.html")
-   //          .print()
-   //      ,
-   //      newButton("continue to confirm", "Click to confirm that your answers went through.")
-   //          .settings.bold()
-   //          .print()
-   //         .wait()
-   //  )]                     
-   //  , // Sona only
-   //  ["final", "PennController", PennController(
-   //       newText("final message", "The results were successfully sent to the server. Thanks!")
-   //           .settings.bold()  
-   //           .settings.center()
-   //           .print()            
-   //   )]
-    
+            .wait()                 
+    )]                     
 ];
 
 PennController.GetTable( "datasource-however.csv" ).setLabel("Expt");
@@ -265,16 +267,12 @@ PennController.FeedItems( PennController.GetTable( "datasource-however.csv" ).fi
     .log("polarity", item.polarity)
     .log("EmbPred", item.EmbPred)
     .log("lemma", item.lemma)
-    .log("SpActAdverb", item.SpActAdverb)
     .log("Group", item.Group)
     .log("Item", item.Item)
     .log("NoExpt", item.NoExpt)
     .log("EmbCondition", item.EmbCondition)
-    .log("StimUnmarked", item.StimUnmarked)
     .log("mcpred", item.mcpred)
-//    .log("StimArgfront", item.StimArgfront)
-//    .log("StimAdjunct", item.StimAdjunct)
-//    .log("StimSpActAdv", item.StimSpActAdv)
+    .log( "ID" , PennController.GetURLParameter("id") ) 
 );
 
 PennController.FeedItems( PennController.GetTable( "datasource-however.csv" ).filter("Expt","experiment"),
@@ -339,17 +337,12 @@ PennController.FeedItems( PennController.GetTable( "datasource-however.csv" ).fi
     .log("polarity", item.polarity)
     .log("EmbPred", item.EmbPred)
     .log("lemma", item.lemma)
-    .log("SpActAdverb", item.SpActAdverb)
     .log("Group", item.Group)
     .log("Item", item.Item)
     .log("NoExpt", item.NoExpt)
     .log("EmbCondition", item.EmbCondition)
-    .log("StimUnmarked", item.StimUnmarked)
     .log("mcpred", item.mcpred)
     .log( "ID" , PennController.GetURLParameter("id") )   
-//    .log("StimArgfront", item.StimArgfront)
-//    .log("StimAdjunct", item.StimAdjunct)
-//    .log("StimSpActAdv", item.StimSpActAdv)
 );
 
 
