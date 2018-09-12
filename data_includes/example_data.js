@@ -1,9 +1,7 @@
 // This tells Ibex you will send the results early
 var manualSendResults = true;
 var showProgressBar = true;
-var shuffleSequence = seq("consent","instructions","prepractice",startsWith("Practice"),"balance","scaleinstr","distract",randomize("experiment-first"),randomize("experiment"),
-                            "feedback","send","confirmation");
-// rshuffle(startsWith("experiment")),rshuffle(startsWith("experiment"))
+var shuffleSequence = seq("consent","instructions","prepractice",startsWith("Practice"),"balance","scaleinstr","distract",randomize("experiment-first"),randomize("experiment"),"inter","feedback1","feedback2","feedback3","send","debrief");
 PennController.ResetPrefix(null);
 
 
@@ -16,13 +14,6 @@ var items = [
             .settings.log()
             .print()
         ,
-        // keyButton("consentBtn", "I consent to take this experiment",
-        //     getHtml("consent").test.complete()
-        //         .failure(
-        //             getHtml("consent").warn(),
-        //             getSelector("selconsentBtn").unselect()
-        //         )
-        // )
         newButton("consent btn", "I consent to take this experiment")
             .print()
             .wait( getHtml("consent").test.complete().failure( getHtml("consent").warn() ) )
@@ -35,7 +26,6 @@ var items = [
         newButton("continue btn", "Click for more instructions.")
             .print()
             .wait()
-//            .wait( getHtml("instructions form").test.complete().failure(getHtml("instructions form").warn()) )
     )]
     ,
     ["prepractice", "PennController", PennController(
